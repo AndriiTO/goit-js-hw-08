@@ -8,7 +8,7 @@
 
 .gallery-item {
   display: flex;
-  flex: 0 0 calc((100% - 30px) / 3);
+  flex: 0 0 calc((100% - 2 * 24px) / 3);
   overflow: hidden;
   transition: transform 0.3s;
 }
