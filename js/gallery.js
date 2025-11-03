@@ -1,4 +1,3 @@
-//  2 галерея
 const images = [
   {
     preview:
@@ -65,78 +64,37 @@ const images = [
   },
 ];
 
-//2 кінець галереї
-// 3 розмітка галереї
 const galleryList = document.querySelector(".gallery");
 
 const markup = images
-  .map(({ preview, original, description }) => {
-    return `
-    <li class="gallery-item">
-      <a class="gallery-link" href="${original}">
-        <img
-          class="gallery-image"
-          src="${preview}"
-          data-source="${original}"
-          alt="${description}"
-        />
-      </a>
-    </li>
-  `;
-  })
-  // 3 кінець розмітки
-  // 3.5 підключення розмітки
+  .map(
+    ({ preview, original, description }) => `
+      <li class="gallery-item">
+        <a class="gallery-link" href="${original}">
+          <img
+            class="gallery-image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+          />
+        </a>
+      </li>
+    `
+  )
   .join("");
+
 galleryList.insertAdjacentHTML("beforeend", markup);
-// 5 делегування
+
 galleryList.addEventListener("click", (event) => {
   event.preventDefault();
-  if (event.target.nodeName !== "IMG") return;
 
-  const largeImageUrl = event.target.dataset.source;
+  const target = event.target;
+  if (target.nodeName !== "IMG") return;
+
+  const largeImageUrl = target.dataset.source;
 
   const instance = basicLightbox.create(`
-    <img src="${largeImageUrl}" alt="${target.alt}" />
+    <img src="${largeImageUrl}" alt="${target.alt}" width="1112" height="640" />
   `);
   instance.show();
-});
-
-// спробував прописати модалку
-const template = document.querySelector("#modal-template");
-// слухач
-galleryList.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  //умова тільки зображення
-  if (event.target.nodeName !== "IMG") return;
-
-  const largeImageUrl = event.target.dataset.source;
-  const altText = event.target.alt;
-
-  // копія щоб не змінювався оригінал
-  const modalContent = template.content.cloneNode(true);
-
-  // джс обєкт для великої картинки
-  const modalImage = modalContent.querySelector(".modal-image");
-  modalImage.src = largeImageUrl;
-  modalImage.alt = altText;
-
-  // модалка
-  const modalDiv = document.createElement("div");
-  modalDiv.classList.add("overlay");
-  modalDiv.appendChild(modalContent);
-  document.body.appendChild(modalDiv);
-
-  // ESC
-  function closeModal(event) {
-    if (event.key === "Escape") {
-      modalDiv.remove();
-      window.removeEventListener("keydown", closeModal);
-    }
-  }
-
-  window.addEventListener("keydown", closeModal);
-
-  // закриття по кліку на overlay
-  modalDiv.addEventListener("click", () => modalDiv.remove());
 });
